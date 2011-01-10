@@ -6,6 +6,7 @@ import gtk
 
 import os
 import sqlite3
+import time
 
 from FrontendConfig import FrontendConfig
 
@@ -65,7 +66,15 @@ class Frontend(object):
             launch_string += ' ' + game['path']
 
         if self.config['Launch']:
+            begin_time = time.time()
             os.system(launch_string)
+            end_time = time.time()
+
+            time_difference = int(end_time - begin_time)
+
+            values = (game['plays'] + 1, game['total_time'] + time_difference, game['emulator'], game['name'])
+
+            self.db.execute('update games set plays = ?, total_time = ? where emulator == ? and name == ?', values)
         else:
             print launch_string
 
