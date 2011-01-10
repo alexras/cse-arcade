@@ -75,6 +75,7 @@ class Frontend(object):
             values = (game['plays'] + 1, game['total_time'] + time_difference, game['emulator'], game['name'])
 
             self.db.execute('update games set plays = ?, total_time = ? where emulator == ? and name == ?', values)
+            self.db.commit()
         else:
             print launch_string
 
