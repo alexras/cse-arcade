@@ -3,13 +3,14 @@
 import os
 import select
 import subprocess
+import time
 from struct import unpack
 
-SELECT_WAIT_TIME = 10
+SELECT_WAIT_TIME = 5
 
 idle_time = 0
 
-port = open("/dev/input/by-id/usb-Ultimarc_I-PAC_Ultimarc_I-PAC-event-kbd","rb")
+port = os.open("/dev/input/by-id/usb-Ultimarc_I-PAC_Ultimarc_I-PAC-event-kbd", os.O_RDONLY | os.O_NONBLOCK)
 
 while 1:
     (reads, writes, excepts) = select.select([port], [], [], SELECT_WAIT_TIME)
@@ -25,7 +26,13 @@ while 1:
     if reads == []:
         idle_time += SELECT_WAIT_TIME
     else:
-        a,b,c,d,e = unpack("llHHI",port.read(16))
+        try:
+            val = os.read(port, 4096)
+        except:
+            time.sleep(SELECT_WAIT_TIME)
+            continue
+
+        time.sleep(SELECT_WAIT_TIME)
         idle_time = 0
 
     #print 'Idle time: %d seconds, game: %s' % (idle_time, game)
