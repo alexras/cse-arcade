@@ -28,6 +28,7 @@ class FrontendConfig(object):
         self.options['RootDir'] = os.path.expanduser(config.get('config', 'RootDir'))
         self.options['DataDir'] = os.path.expanduser(config.get('config', 'DataDir'))
         self.options['HidePointer'] = config.get('config', 'HidePointer').lower() in AFFIRMATIVE
+        self.options['IdleKiller'] = config.get('config', 'IdleKiller').lower() in AFFIRMATIVE
         self.options['Fullscreen'] = config.get('config', 'Fullscreen').lower() in AFFIRMATIVE
         self.options['Launch'] = config.get('config', 'Launch').lower() in AFFIRMATIVE
         self.options['PrintKeys'] = config.get('config', 'PrintKeys').lower() in AFFIRMATIVE

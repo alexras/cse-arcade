@@ -157,6 +157,12 @@ class Frontend(object):
                 while (True):
                     os.system('unclutter')
 
+        if self.config['IdleKiller']:
+            self.idle_child = os.fork()
+            if self.idle_child == 0:
+                while (True):
+                    os.system(self.config['RootDir'] + '/Scripts/IdleKiller.py')
+
         # Get glade objects and connect signal handlers.
         signal_handlers = { 'on_top_level_window_destroy' : self.exit,
                             'on_top_level_window_key_press_event' : self.key_press,
