@@ -34,7 +34,7 @@ for rom in roms:
 
         values = (romname, romname, description, 'mame-images/%s.png' % romname, 480)
 
-        db.execute('insert into Games values (0, ?, ?, "", ?, ?, ?)', values)
+        db.execute('insert into Games values (0, ?, ?, "", ?, ?, ?, 0, 0)', values)
 
 db.commit()
 db.close()

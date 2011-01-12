@@ -37,6 +37,8 @@ class Frontend(object):
         self.db.close()
         if self.config['HidePointer']:
             os.system('kill -9 %d' % self.unclutter_child)
+        if self.config['IdleKiller']:
+            os.system('kill -9 %d' % self.idle_child)
 
         print 'Goodbye!'
         gtk.main_quit()
@@ -54,6 +56,14 @@ class Frontend(object):
 
             # If we're switching interfaces, replace the executing image.
             print (self.config['RootDir'] + game['path'])
+            self.db.commit()
+            self.db.close()
+
+            if self.config['HidePointer']:
+                os.system('kill -9 %d' % self.unclutter_child)
+            if self.config['IdleKiller']:
+                os.system('kill -9 %d' % self.idle_child)
+
             os.execlp('python', 'python', self.config['RootDir'] + game['path'])
             return
         
@@ -76,6 +86,7 @@ class Frontend(object):
 
             self.db.execute('update games set plays = ?, total_time = ? where emulator == ? and name == ?', values)
             self.db.commit()
+            self.repopulate_games(emulator)
         else:
             print launch_string
 
