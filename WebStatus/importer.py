@@ -61,14 +61,14 @@ for row in db.execute("SELECT E.name as platform_name, G.name as game_name, "
     # If the game doesn't exist, create it
     # Otherwise, set its play count and total time
     try:
-        game = Game.objects.get(name=game_name)
-        print >>sys.stderr, "Updating game %s" % (game_name)
+        game = Game.objects.get(name=game_name, platform=platform)
+        print >>sys.stderr, "Updating game %s for %s" % (game_name, platform.name)
         game.plays = plays
         game.total_time = total_time
         game.save()
         
     except:
-        print >>sys.stderr, "Creating game %s" % (game_name)
+        print >>sys.stderr, "Creating game %s for %s" % (game_name, platform.name)
         game = platform.game_set.create(name=game_name, plays=plays, 
                                         total_time=total_time)
         
