@@ -13,7 +13,8 @@ class Game(object):
         self.plays = plays
 
 def index(request):
-    STATUS_UPDATE_FILE = "%s/status_updates/status_update" % (os.getenv("HOME"))
+    STATUS_UPDATE_FILE = "/home/arcade/status_updates/status_update"
+    
     assert(os.path.exists(STATUS_UPDATE_FILE))
     fp = open(STATUS_UPDATE_FILE, 'r')
     status = json.load(fp)
