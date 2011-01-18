@@ -6,7 +6,14 @@
 
 <h1>Arcade Machine Status</h1>
 
-<h2>Total Play Time: {{ total_play_time }}</h2>
+<h2>{% if playing %}
+Someone is playing {{ current_game }}
+{% else %}
+The machine is idle.
+{% endif %}</h2>
+
+
+<h2>Total Play Time: {{ total_time }}</h2>
 
 <h2>Top 10 Games by Total Time Played</h2>
 
@@ -18,8 +25,8 @@
 </tr>
 {% for game in top_ten_by_total_time %}
 <tr>
-<td>{{game.name}}</td>
-<td>{{game.total_time_in_hours}}</td>
+<td>{{ game.name }}</td>
+<td>{{ game.time }}</td>
 </tr>
 {% endfor %}
 </table>
@@ -33,24 +40,13 @@
 <th>Game</th>
 <th>Plays</th>
 </tr>
-{% for game in top_ten_by_play_count %}
+{% for game in top_ten_by_plays %}
 <tr>
-<td>{{game.name}}</td>
-<td>{{game.plays}}</td>
+<td>{{ game.name }}</td>
+<td>{{ game.plays }}</td>
 </tr>
 {% endfor %}
 </table>
 </p>
-
-<h2>Game List</h2>
-{% for platform in platform_list %}
-<p><b>{{platform.name}}</b><br/>
-<ul>
-  {% for game in platform.ordered_games_list %}
-  <li>{{ game.name }}</li>
-  {% endfor %}
-</ul>
-</p>
-{% endfor %}
 </body>
 </html>
