@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# EMAIL_HOST = "cse-smtp.ucsd.edu"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
 ADMINS = (
     ('Alex Rasmussen', 'alexras@acm.org'),
 )
