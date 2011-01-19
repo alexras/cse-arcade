@@ -8,11 +8,13 @@
 
 <h2>Last updated: {{ last_update  }}</h2>
 
-<h2>{% if playing %}
-Someone is playing {{ current_game }}
+<h2>{% if pressing_buttons %}
+Someone is pressing buttons but not playing anything.
+{% else %}{% if playing %}
+Someone is playing <span style="font-family: monospace">{{ current_game }}</span>.
 {% else %}
 The machine is idle.
-{% endif %}</h2>
+{% endif %}{% endif %}</h2>
 
 
 <h2>Total Play Time: {{ total_time }}</h2>
