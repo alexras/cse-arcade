@@ -30,6 +30,8 @@ def index(request):
     
     postprocessed_status['playing'] = bool(status['status'])
     postprocessed_status['current_game'] = status['current_game']
+    postprocessed_status['pressing_buttons'] = postprocessed_status['playing'] \
+        and postprocessed_status['current_game'] == "Idle"
     
     postprocessed_status['last_update'] = time.ctime(int(status['last_update']))
     
