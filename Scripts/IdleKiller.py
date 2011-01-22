@@ -27,8 +27,14 @@ while 1:
     if pid == '':
         game = 'Idle'
     else:
-        ps = subprocess.Popen(['ps', '-p', pid, '-o', 'args:70'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-        game = ps.strip().split('\n')[1]
+        if game == 'Idle':
+            needs_update = True
+        
+        try:
+            ps = subprocess.Popen(['ps', '-p', pid, '-o', 'args:70'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+            game = ps.strip().split('\n')[1]
+        except:
+            continue
 
     if reads == []:
         if status == STATUS_BUSY:

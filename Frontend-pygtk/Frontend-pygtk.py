@@ -20,6 +20,9 @@ DATA = 1
 def get_selection(view):
     return view.get_cursor()[0][0]
 
+def set_selection(view, value):
+    view.set_cursor((value,))
+
 def move_cursor(view, direction):
     selection = get_selection(view)
     selection += direction
@@ -84,9 +87,13 @@ class Frontend(object):
 
             values = (game['plays'] + 1, game['total_time'] + time_difference, game['emulator'], game['name'])
 
+            cursor = get_selection(self.view)
+
             self.db.execute('update games set plays = ?, total_time = ? where emulator == ? and name == ?', values)
             self.db.commit()
             self.repopulate_games(emulator)
+
+            set_selection(self.view, cursor)
         else:
             print launch_string
 
