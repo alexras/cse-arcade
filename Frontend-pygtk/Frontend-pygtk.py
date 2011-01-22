@@ -56,6 +56,8 @@ class Frontend(object):
             if game['name'] == 'PyGame interface':
                 self.set_description('DISABLED: Not finished yet!')
                 return
+            if game['name'] == 'PyGTK interface':
+                return
 
             # If we're switching interfaces, replace the executing image.
             print (self.config['RootDir'] + game['path'])
@@ -85,12 +87,14 @@ class Frontend(object):
 
             time_difference = int(end_time - begin_time)
 
-            values = (game['plays'] + 1, game['total_time'] + time_difference, game['emulator'], game['name'])
-
             cursor = get_selection(self.view)
 
-            self.db.execute('update games set plays = ?, total_time = ? where emulator == ? and name == ?', values)
+            values = (game['plays'] + 1, game['total_time'] + time_difference, game['id'])
+            self.db.execute('update Games set plays = ?, total_time = ? where id == ?', values)
+            values = (game['id'], int(begin_time), int(end_time))
+            self.db.execute('insert into Plays values (?, ?, ?)', values)
             self.db.commit()
+
             self.repopulate_games(emulator)
 
             set_selection(self.view, cursor)
@@ -153,7 +157,7 @@ class Frontend(object):
     # Updates the preview image and description when given a DB row.
     def update_info(self, item):
         self.set_description(item['description'])
-        self.set_preview(self.config['DataDir'] + '/' + item['image'], item['image_width'])
+        self.set_preview(self.config['DataDir'] + '/' + item['image'], item['image_height'], item['image_width'])
 
     # Sets the text under the image.
     def set_description(self, text):
@@ -161,18 +165,17 @@ class Frontend(object):
 
     # Try to set the preview image according to DB info.
     # If unsuccessful (image doesn't exist), fall back to a "not found" image.
-    def set_preview(self, path, width):
+    def set_preview(self, path, height, width):
         try:
-            #FIXME: multiplied size by 1.5 - Size, both height and width, should probably be in DB
-            self.preview.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(path).scale_simple(width*1.5,360*1.5,gtk.gdk.INTERP_BILINEAR))
+            self.preview.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(path).scale_simple(width,height,gtk.gdk.INTERP_BILINEAR))
         except:
-            self.preview.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file('%s/no_preview.png' % self.config['DataDir']).scale_simple(480,360,gtk.gdk.INTERP_BILINEAR))
+            self.preview.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file('%s/no_preview.png' % self.config['DataDir']).scale_simple(720,540,gtk.gdk.INTERP_BILINEAR))
 
     def __init__(self):
         self.config = FrontendConfig('frontend-pygtk')
 
         # Set default volume levels.
-        os.system('amixer set Master 65%')
+        os.system('amixer set Master 40%')
         os.system('amixer set PCM 100%')
 
         # Hack because glade won't let me specify a python object type. >:(
