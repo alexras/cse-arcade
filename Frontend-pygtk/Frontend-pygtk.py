@@ -89,10 +89,12 @@ class Frontend(object):
 
             cursor = get_selection(self.view)
 
-            values = (game['plays'] + 1, game['total_time'] + time_difference, game['id'])
-            self.db.execute('update Games set plays = ?, total_time = ?, where id == ?', values)
-            values = (game['id'], int(begin_time), int(end_time))
-            self.db.execute('insert into Plays values (?, ?, ?)', values)
+            update_values = (game['plays'] + 1, game['total_time'] + time_difference, game['id'])
+            self.db.execute('update Games set plays = ?, total_time = ? where id == ?', update_values)
+            self.db.commit()
+
+            insert_values = (game['id'], int(begin_time), int(end_time))
+            self.db.execute('insert into Plays values (?, ?, ?)', insert_values)
             self.db.commit()
 
             self.repopulate_games(emulator)
