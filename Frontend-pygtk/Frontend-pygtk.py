@@ -46,10 +46,40 @@ class Frontend(object):
         print 'Goodbye!'
         gtk.main_quit()
 
-    # Launch a game!
-    def launch(self, emulator, game):
+    def build_launch_string(self, emulator, game):
         launch_string = emulator['path']
 
+        if game['args'] is None or game['args'] == '':
+            launch_string += ' ' + emulator['args']
+        else:
+            launch_string += ' ' + game['args']
+
+        if game['path'] is not None:
+            launch_string += ' ' + game['path']
+
+        # Hackish.  Currently only used for SNES autosave.  A more general
+        # flag handling mechanism would probably be better if we adopt more
+        # flags in the future.
+        if emulator['id'] == 2:
+            if game['flags'] is not None and 'SNES_AUTOSTATE' in game['flags']:
+                # Symlink the config file with AutoState set to on.
+                if self.config['Launch']:
+                    os.system('rm -f /home/arcade/.zsnes/zsnesl.cfg')
+                    os.system('ln -s /home/arcade/.zsnes/zsnesl.cfg.auto /home/arcade/.zsnes/zsnesl.cfg')
+                else:
+                    print 'Would symlink zsnesl.cfg.auto'
+            else:
+                # Symlink the config file with AutoState set to off.
+                if self.config['Launch']:
+                    os.system('rm -f /home/arcade/.zsnes/zsnesl.cfg')
+                    os.system('ln -s /home/arcade/.zsnes/zsnesl.cfg.noauto /home/arcade/.zsnes/zsnesl.cfg')
+                else:
+                    print 'Would symlink zsnesl.cfg.noauto'
+
+        return launch_string
+
+    # Launch a game!
+    def launch(self, emulator, game):
         # Hack to make switching interfaces work.
         if game['name'] == 'PyGTK interface' or game['name'] == 'PyGame interface':
             # The pygame interface isn't ready for prime-time yet.
@@ -71,14 +101,8 @@ class Frontend(object):
 
             os.execlp('python', 'python', self.config['RootDir'] + game['path'])
             return
-        
-        if game['args'] is None or game['args'] == '':
-            launch_string += ' ' + emulator['args']
-        else:
-            launch_string += ' ' + game['args']
 
-        if game['path'] is not None:
-            launch_string += ' ' + game['path']
+        launch_string = self.build_launch_string(emulator, game)
 
         if self.config['Launch']:
             begin_time = time.time()
@@ -100,7 +124,7 @@ class Frontend(object):
 
             set_selection(self.game_view, cursor)
         else:
-            print launch_string
+            print 'Would launch: %s' % launch_string
 
     # Repopulates the game_{view,model} when a new emulator is selected.
     def repopulate_games(self, emulator):
