@@ -32,9 +32,9 @@ for rom in roms:
 
         print 'Adding %s' % str(romname)
 
-        values = (romname, romname, description, 'mame-images/%s.png' % romname, 480)
+        values = (romname, romname, description, 'mame-images/%s.png' % romname, 720, 540)
 
-        db.execute('insert into Games values (0, ?, ?, "", ?, ?, ?, 0, 0)', values)
+        db.execute('insert into Games (emulator, name, path, args, description, image, image_width, image_height, plays, total_time) values (0, ?, ?, "", ?, ?, ?, ?, 0, 0)', values)
 
 db.commit()
 db.close()

@@ -111,18 +111,19 @@ class Frontend(object):
 
             time_difference = int(end_time - begin_time)
 
-            cursor = get_selection(self.game_view)
+            if time_difference > 15:
+                cursor = get_selection(self.game_view)
 
-            update_values = (game['plays'] + 1, game['total_time'] + time_difference, game['id'])
-            res = self.db.execute('update Games set plays = ?, total_time = ? where id == ?', update_values)
+                update_values = (game['plays'] + 1, game['total_time'] + time_difference, game['id'])
+                res = self.db.execute('update Games set plays = ?, total_time = ? where id == ?', update_values)
 
-            insert_values = (game['id'], int(begin_time), int(end_time))
-            res = self.db.execute('insert into Plays values (?, ?, ?)', insert_values)
-            self.db.commit()
+                insert_values = (game['id'], int(begin_time), int(end_time))
+                res = self.db.execute('insert into Plays values (?, ?, ?)', insert_values)
+                self.db.commit()
 
-            self.repopulate_games(emulator)
+                self.repopulate_games(emulator)
 
-            set_selection(self.game_view, cursor)
+                set_selection(self.game_view, cursor)
         else:
             print 'Would launch: %s' % launch_string
 
