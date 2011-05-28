@@ -1,0 +1,8 @@
+Directory information:
+
+Data - Backend data (Emulator/Game database, preview images, etc.)
+Frontend-common - Elements common to both frontends (like config loading).
+Frontend-pygtk - PyGtk-based plain frontend.
+Frontend-pygame - PyGame-based fancy frontend.
+Graphics - any infographics, side panel art, etc.
+Scripts - Help scripts (loading the DB, changing volume, etc.)
