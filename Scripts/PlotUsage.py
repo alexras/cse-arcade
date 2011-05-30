@@ -47,12 +47,12 @@ def getBinBars(rows, binKey, quantityKey, xLabelFormattingFunction,
     barPlot.add(bar)
     barPlot.setXLabel(xLabel)
     barPlot.setYLabel(yLabel)
-    barPlot.setXLimits(0, None)
+#    barPlot.setXLimits(0, None)
     return barPlot
 
 def binByHourOfDay(db):
     rows = db.execute("""
-SELECT strftime('%H', datetime(start, 'unixepoch')) AS hour, SUM(end - start) / 3600.0 as sum
+SELECT strftime('%H', datetime(start, 'unixepoch', 'localtime')) AS hour, SUM(end - start) / 3600.0 as sum
 from Plays GROUP BY hour
 """)
 
@@ -65,7 +65,7 @@ def binByDayOfWeek(db):
     dayOfWeekStrings = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
     rows = db.execute("""
-SELECT strftime('%w', datetime(start, 'unixepoch')) AS weekday,
+SELECT strftime('%w', datetime(start, 'unixepoch', 'localtime')) AS weekday,
 SUM(end - start) / 3600.0 AS sum FROM Plays GROUP BY weekday
 """)
 
