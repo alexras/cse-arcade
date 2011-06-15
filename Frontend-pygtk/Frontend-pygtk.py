@@ -105,10 +105,27 @@ class Frontend(object):
         launch_string = self.build_launch_string(emulator, game)
 
         if self.config['Launch']:
+            # Run the correct joypad profile!
+            os.system('killall -9 qjoypad')
+            if emulator['id'] == 0:
+                #MAME
+                os.system('/home/arcade/qjoypad-4.1.0/src/qjoypad mame &')
+            elif emulator['id'] == 1:
+                #Genesis
+                os.system('/home/arcade/qjoypad-4.1.0/src/qjoypad genesis &')
+            elif emulator['id'] == 2:
+                #SNES
+                os.system('/home/arcade/qjoypad-4.1.0/src/qjoypad snes &')
+            elif emulator['id'] == 4:
+                #NES
+                #os.system('/home/arcade/qjoypad-4.1.0/src/qjoypad nes &')
+                pass
+
             begin_time = time.time()
             os.system(launch_string)
             end_time = time.time()
 
+            # Statistics
             time_difference = int(end_time - begin_time)
 
             if time_difference > 15:
