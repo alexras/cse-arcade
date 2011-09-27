@@ -141,6 +141,19 @@ class Frontend(object):
                 self.repopulate_games(emulator)
 
                 set_selection(self.game_view, cursor)
+
+            maintenance_lock_path = "/home/arcade/maintenance_lock"
+
+            if os.path.exists(maintenance_lock_path):
+                self.set_description(
+                    "MAINTENANCE MODE ACTIVE - we're making edits to the "
+                    "arcade machine. Please wait ...")
+                self.set_preview("/home/arcade/Data/under-construction.jpg",
+                                 347, 346)
+
+                while os.path.exists(maintenance_lock_path):
+                    time.sleep(1)
+
         else:
             print 'Would launch: %s' % launch_string
 
