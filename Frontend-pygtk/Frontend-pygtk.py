@@ -26,7 +26,7 @@ def set_selection(view, value):
 def move_cursor(view, direction):
     selection = get_selection(view)
     selection += direction
-    
+
     if selection < 0:
         selection = 0
     if selection >= len(view.get_model()):

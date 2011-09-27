@@ -22,14 +22,14 @@ port = os.open("/dev/input/by-id/usb-Ultimarc_I-PAC_Ultimarc_I-PAC-event-kbd", o
 while 1:
     (reads, writes, excepts) = select.select([port], [], [], SELECT_WAIT_TIME)
 
-    pid = subprocess.Popen(['pgrep', 'mame|snes|gens'], stdout=subprocess.PIPE, close_fds=True).communicate()[0].strip()
+    pid = subprocess.Popen(['pgrep', 'mame|snes|gens|mednafen'], stdout=subprocess.PIPE, close_fds=True).communicate()[0].strip()
 
     if pid == '':
         game = 'Idle'
     else:
         if game == 'Idle':
             needs_update = True
-        
+
         try:
             ps = subprocess.Popen(['ps', '-p', pid, '-o', 'args:70'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
             game = ps.strip().split('\n')[1]
