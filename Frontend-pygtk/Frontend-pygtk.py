@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
+import gobject
 
 import os
 import sqlite3
@@ -45,6 +46,24 @@ class Frontend(object):
 
         print 'Goodbye!'
         gtk.main_quit()
+
+    def check_maintenance_mode(self):
+        old_maint_mode = self.maintenance_mode
+        self.maintenance_mode = os.path.exists(self.maintenance_lock_path)
+
+        if self.maintenance_mode and not old_maint_mode:
+            self.set_description(
+                "MAINTENANCE MODE ACTIVE - we're making edits to the "
+                "arcade machine. Please wait ...")
+            self.set_preview(
+                "/home/arcade/cse-arcade/Data/under-construction.jpg",
+                347, 346)
+
+        if not self.maintenance_mode and old_maint_mode:
+            self.repopulate_games(self.emulator_model[0][DATA])
+            self.update_info(self.emulator_model[0][DATA])
+
+        return True
 
     def build_launch_string(self, emulator, game):
         launch_string = emulator['path']
@@ -141,19 +160,6 @@ class Frontend(object):
                 self.repopulate_games(emulator)
 
                 set_selection(self.game_view, cursor)
-
-            maintenance_lock_path = "/home/arcade/maintenance_lock"
-
-            if os.path.exists(maintenance_lock_path):
-                self.set_description(
-                    "MAINTENANCE MODE ACTIVE - we're making edits to the "
-                    "arcade machine. Please wait ...")
-                self.set_preview("/home/arcade/Data/under-construction.jpg",
-                                 347, 346)
-
-                while os.path.exists(maintenance_lock_path):
-                    time.sleep(1)
-
         else:
             print 'Would launch: %s' % launch_string
 
@@ -182,6 +188,9 @@ class Frontend(object):
     # Handles key events.  Use release rather than press to allow
     # {emulator,game}_view to update its selection before detecting the event.
     def key_release(self, window, event):
+        if self.maintenance_mode:
+            return
+
         emulator = self.emulator_model[get_selection(self.emulator_view)][DATA]
 
         key = gtk.gdk.keyval_name(event.keyval)
@@ -266,6 +275,11 @@ class Frontend(object):
         self.game_model = self.game_view.get_model()
         self.preview = builder.get_object('preview_image')
         self.description = builder.get_object('description_label')
+
+        self.maintenance_lock_path = "/home/arcade/maintenance_lock"
+        self.maintenance_mode = False
+        self.maintenance_timer = gobject.timeout_add(
+            1000, self.check_maintenance_mode)
 
         # "Connect" to the sqlite DB and populate the emulator model.
         self.db = sqlite3.connect('%s/Arcade.db' % self.config['DataDir'])
