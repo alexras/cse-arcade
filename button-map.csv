@@ -1,0 +1,24 @@
+button,player one,player two
+up,up,R
+down,down,F
+left,left,D
+right,right,G
+1,control,A
+2,alt,S
+3,space,Q
+4,shift,W
+5,Z,I
+6,X,K
+start,1,2
+coin,5,6
+,,
+,,
+,,
+,,
+,,
+shift=player 1 start,,
+shift + player 2 start= escape,,
+shift + up=`,,
+shift + down=p,,
+shift + left= return,,
+shift + right= tab,,
