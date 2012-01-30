@@ -107,6 +107,4 @@ while 1:
         json.dump(json_dict, outfile)
         outfile.close()
 
-        os.system('scp /home/arcade/status_update arcade@alexras.sysnet.ucsd.edu:/home/arcade/status_updates/status_update')
-
         needs_update = False
