@@ -1,0 +1,8 @@
+<html>
+  <head>
+    <title>CSEArcade - Error</title>
+  </head>
+  <body>
+    <p><b>An error occurred</b>: {{ message }}</p>
+  </body>
+</html>

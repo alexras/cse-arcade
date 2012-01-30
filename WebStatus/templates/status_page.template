@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Arcade Machine Status</title>
+
+<style type="text/css">
+h1 {
+font-size: 2em;
+}
+
+h2 {
+font-size: 1.5em;
+}
+
+* {
+font-family: "Helvetica", Georgia, sans-serif;
+}
+
+table {
+width: 25em;
+border-spacing: 0;
+border: 1px solid #bbbbbb;
+}
+
+th {
+color: #FFFFFF;
+background: #009999;
+}
+
+td {
+padding-left: 0.5em;
+padding-right: 0.5em;
+}
+
+td.left {
+border-right: 1px solid #bbbbbb;
+}
+
+td.right {
+text-align: center;
+}
+
+.red {
+color: #ff0000;
+}
+
+.green {
+color: #00BF32;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Arcade Machine Status</h1>
+
+<h2>Last updated: {{ last_update  }}</h2>
+
+<h2>Status: {% if pressing_buttons %}
+<span class="red">Someone is pressing buttons but not playing anything.</span>
+{% else %}{% if playing %}
+<span class="red">Someone is playing <span style="font-family: monospace">{{ current_game }}</span></span>.
+{% else %}
+<span class="green">The machine is idle.</span>
+{% endif %}{% endif %}</h2>
+
+
+<h2>Total Play Time: {{ total_time }}</h2>
+
+<h2>Top 10 Games by Total Time Played</h2>
+
+<p>
+<table>
+<tr>
+<th>Game</th>
+<th>Time</th>
+</tr>
+{% for game in top_ten_by_total_time %}
+<tr>
+<td class="left">{{ game.name }}</td>
+<td class="right">{{ game.time }}</td>
+</tr>
+{% endfor %}
+</table>
+</p>
+
+<h2>Top 10 Games by Play Count</h2>
+
+<p>
+<table>
+<tr>
+<th>Game</th>
+<th>Plays</th>
+</tr>
+{% for game in top_ten_by_plays %}
+<tr>
+<td class="left">{{ game.name }}</td>
+<td class="right">{{ game.plays }}</td>
+</tr>
+{% endfor %}
+</table>
+</p>
+</body>
+</html>
